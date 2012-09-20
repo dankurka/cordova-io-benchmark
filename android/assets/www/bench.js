@@ -29,8 +29,16 @@ document.addEventListener("deviceready", function(){
 	
 	var setup = function(setup_success){
 		var fsWriter = function(fileName, number, dataToWrite, success, fail){
-			window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function(fs) { 
- 				fs.root.getDirectory("/sdcard/tmp/iobench", {create: true, exclusive: false}, function(dir) { 
+			window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function(fs) {
+				var prefix = ""; 
+				if (fs.root.fullPath == "/mnt/sdcard") { 
+					prefix = "/mnt/sdcard/"; 
+				} else { 
+					prefix = "/sdcard/"; 
+				}
+				 
+				
+ 				fs.root.getDirectory(prefix + "tmp", {create: true, exclusive: false}, function(dir) { 
 					dir.getFile(fileName, {create: true, exclusive: false}, function(fileEntry){
 						fileEntry.createWriter(function(writer){
 							var numberOfTimes = number;
@@ -142,6 +150,5 @@ document.addEventListener("deviceready", function(){
 	button.addEventListener("click", function(){
 		startBenchMark(bench_files);
 	});
-	
 	
 });
